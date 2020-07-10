@@ -6,19 +6,37 @@ public class Player : MonoBehaviour
 {
     //Declarando uma variavel:
     //identificador, publico(qualquer outro script pode acessar) ou privado(apenas esse script).
+    //uma boa pratica é utilizar o underline na frente da declaracao da variavel p saber q ele eh privada sem precisar olhar o topo do codigo.
     //tipo de dado, oq essa variavel vai manter, int, float, etc...
     //escolhendo um nome para a variavel.
     //(opcional) - pode se declarar um valor inicial ao componente.
 
+    //Quando usar gameobject ou transform:
+    //todo objeto do unity é considerado um gameobject, e todo gameobject tem um transform. Um transform é um game object. Ambos funcionam bem.
+    //A dica é sempre usar gameobject quando se esta instanciando coisas.
+
     //SerializeField é um atributo que permite a variavel aparecer no inspetor(unity), msm sendo privada. Processo chamado de [Sereializacao].
-    [SerializeField]
     //ao usar um float com casa decimal, tem q incluir um f no final(determina q eh um valor decimal).
-    private float speed = 5.0f;
+
+
+    [SerializeField]
+    //criando a variavel do laser.
+    private GameObject _laserPrefab;
+
+    //criando as variaveis p poder dar o proximo tiro.
+    [SerializeField]
+    private float _fireRate = 0.25f;
+
+    private float _canFire = 0.0f;
+
+    //variavel da velocidade do jogador.
+    [SerializeField]
+    private float _speed = 5.0f;
 
 
     // Start is called before the first frame update
     void Start()
-    {
+    {      
         //passando os valores dos eixos "x, y, z" para 0, no objeto.
         transform.position = new Vector3(0, 0, 0);
     }
@@ -30,10 +48,18 @@ public class Player : MonoBehaviour
         //inicializando o metodo(funcao) Movement.
         //a cada frame que chamarmos o metodo, todo o codigo dele sera lido.
         Movement();
+
+        //Ao abrir o gerenciador de inputs.
+        //e escolher oq mantem a tecla precionada.
+        //escolhemos o codigo e a tecla.
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
+        {
+            Shoot();
+        }     
+
     }
 
-
-    //private pq a movimentacao eh uma funcao especifica do player
+    //private pq a movimentacao eh uma funcao especifica do player.
     private void Movement()
     {
         //translate é a movimentacao q o obejto terá.
@@ -46,7 +72,7 @@ public class Player : MonoBehaviour
 
         //Input é a entrada do teclado.
         //Get axis pegal qual botao vai usar, conforme os axes padroes.
-        //definimos horizontal para inputs horizontais
+        //definimos horizontal para inputs horizontais.
         //ao multiplicar a variavel q recebe o input, definimos p qual lado o objeto vai se mexer.
         //por padrao, o valor do input vem como 0, ao clicar em uma tecla, ele recebe um valor.
 
@@ -54,12 +80,12 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         //vector3 com 1 no eixo x (1, 0, 0), velocidade, direcao apertada, tempo real.
-        transform.Translate(Vector3.right * speed * horizontalInput * Time.deltaTime);
+        transform.Translate(Vector3.right * _speed * horizontalInput * Time.deltaTime);
 
         //vector3 com 1 no eixo y (0, 1, 0), velocidade, direcao apertada, tempo real.
-        transform.Translate(Vector3.up * speed * verticalInput * Time.deltaTime);
+        transform.Translate(Vector3.up * _speed * verticalInput * Time.deltaTime);
 
-        //se o player estiver em y e for maior q 0
+        //se o player estiver em y e for maior q 0.
         //passo a posicao y do player p 0.
 
         //restringindo as bordas q nao quero q o player passe:
@@ -87,5 +113,27 @@ public class Player : MonoBehaviour
 
         //eh possivel fazer ele aparecer no outro lado, ao inves de trancar numa posicao.
         //bastar mudar os valores do if para 9.4 e -9.4, e a posicao do x no vetor3 com os respectivos valores(9.4f).
+    }
+
+    private void Shoot()
+    {
+        //Quaternions é como o Unity lidacom entradas rotacionais.
+        //time.time é a quantidade de tempo que o jogo esta sendo executado(tempo em segundos desde o inicio do game).
+        //quando clicar em play, time.time sera = 0.
+
+        //verificando se o tempo de jogo é maior que o tempo do firerate.
+        //se for, posso atirar.
+        if (Time.time > _canFire)
+        {
+            //instancia o laser.
+            //quando digitamos transform estamos obtendo o objeto ao qual este script esta conectado(player).
+            //nome do prefab, posicao do objeto, rotacao.
+            //Quartenion identity siginifica q nao queremos alterar a rotacao do objeto(sem rotacao ou rotacao padrao).
+            //adicionado um vector3 p somar a posicao q quero q sai o laser da posicao do objeto(player).
+            Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.92f, 0), Quaternion.identity);
+
+            //apos sair o tiro, precisamo re-atribuir o valor do canFire para que a condicao nao seja verdadeira ate passar o tempo correto do firerate.
+            _canFire = Time.time + _fireRate;
+        }
     }
 }

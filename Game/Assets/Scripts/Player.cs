@@ -22,16 +22,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     //criando a variavel do laser.
     private GameObject _laserPrefab;
+    [SerializeField]
+    private GameObject _tripleShotPrefab;
 
     //criando as variaveis p poder dar o proximo tiro.
     [SerializeField]
     private float _fireRate = 0.25f;
-
     private float _canFire = 0.0f;
 
     //variavel da velocidade do jogador.
     [SerializeField]
     private float _speed = 5.0f;
+
+    public bool canTripleShot = false;
 
 
     // Start is called before the first frame update
@@ -125,15 +128,49 @@ public class Player : MonoBehaviour
         //se for, posso atirar.
         if (Time.time > _canFire)
         {
-            //instancia o laser.
-            //quando digitamos transform estamos obtendo o objeto ao qual este script esta conectado(player).
-            //nome do prefab, posicao do objeto, rotacao.
-            //Quartenion identity siginifica q nao queremos alterar a rotacao do objeto(sem rotacao ou rotacao padrao).
-            //adicionado um vector3 p somar a posicao q quero q sai o laser da posicao do objeto(player).
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.92f, 0), Quaternion.identity);
+            if(canTripleShot == true)
+            {
+                //center
+                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            }
+
+            else
+            {
+                //instancia o laser.
+                //quando digitamos transform estamos obtendo o objeto ao qual este script esta conectado(player).
+                //nome do prefab, posicao do objeto, rotacao.
+                //Quartenion identity siginifica q nao queremos alterar a rotacao do objeto(sem rotacao ou rotacao padrao).
+                //adicionado um vector3 p somar a posicao q quero q sai o laser da posicao do objeto(player).
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.92f, 0), Quaternion.identity);
+            }
 
             //apos sair o tiro, precisamo re-atribuir o valor do canFire para que a condicao nao seja verdadeira ate passar o tempo correto do firerate.
             _canFire = Time.time + _fireRate;
         }
+    }
+
+    //metodo p ativar o powerup.
+    public void TripleShotPowerupOn()
+    {
+        //a partir do powerup, definimos q cantripleShot = true;
+        canTripleShot = true;
+        //rotina q mantem o poder ativo por algum tempo.
+        StartCoroutine(TripleShotDownRoutine());
+    }
+
+    //couroutine nos permite esperar um tempo em segundos e depois executar uma acao.
+    //IEnumerator é obrigatorio para criar uma corotina.
+    //comeca a corotina criada no script player.
+    //se destruirmos o objeto q chama a corotina, ele nunca sera habilitado.
+    //melhor maneira de corrigir isso é criar um metodo(no player) q ativa o powerup.
+
+    //couroutine
+    public IEnumerator TripleShotDownRoutine()
+    {
+        //faz esperar por um tempo em segundos.
+        yield return new WaitForSeconds(10.0f);
+
+        //atribuir p falso o tripleshot p desativar o powerup.
+        canTripleShot = false;
     }
 }

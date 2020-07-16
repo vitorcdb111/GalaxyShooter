@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     private float _speed = 5.0f;
 
     public bool canTripleShot = false;
+    //um padrao eh definir uma bool como uma pergunta isSpeedBostActive
+    public bool canSpeedBost = false;
 
 
     // Start is called before the first frame update
@@ -82,11 +84,21 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        //vector3 com 1 no eixo x (1, 0, 0), velocidade, direcao apertada, tempo real.
-        transform.Translate(Vector3.right * _speed * horizontalInput * Time.deltaTime);
+        if(canSpeedBost == true)
+        {
+            transform.Translate(Vector3.right * _speed * 1.5f * horizontalInput * Time.deltaTime);
+            transform.Translate(Vector3.up * _speed * 1.5f * verticalInput * Time.deltaTime);
+        }
+        else
+        {
+            //vector3 com 1 no eixo x (1, 0, 0), velocidade, direcao apertada, tempo real.
+            transform.Translate(Vector3.right * _speed * horizontalInput * Time.deltaTime);
 
-        //vector3 com 1 no eixo y (0, 1, 0), velocidade, direcao apertada, tempo real.
-        transform.Translate(Vector3.up * _speed * verticalInput * Time.deltaTime);
+            //vector3 com 1 no eixo y (0, 1, 0), velocidade, direcao apertada, tempo real.
+            transform.Translate(Vector3.up * _speed * verticalInput * Time.deltaTime);
+        }
+
+        
 
         //se o player estiver em y e for maior q 0.
         //passo a posicao y do player p 0.
@@ -172,5 +184,19 @@ public class Player : MonoBehaviour
 
         //atribuir p falso o tripleshot p desativar o powerup.
         canTripleShot = false;
+    }
+
+    public void SpeedBoostPowerupOn()
+    {
+        canSpeedBost = true;
+
+        StartCoroutine(SpeedBostDownRoutine());
+    }
+
+    public IEnumerator SpeedBostDownRoutine()
+    {
+        yield return new WaitForSeconds(10.0f);
+
+        canSpeedBost = false;
     }
 }

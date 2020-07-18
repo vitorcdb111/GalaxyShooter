@@ -34,6 +34,7 @@ public class Powerup : MonoBehaviour
             //sempre verificar se o componente é nulo.
             if(player != null)
             {
+                //definimos no inspetor os ids, assim, cada powerup tem seu proprio id.
                 if(powerUpID == 0)
                 {
                     //so vai acessar variaveis publicas.

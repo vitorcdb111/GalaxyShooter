@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     //Quando usar gameobject ou transform:
     //todo objeto do unity é considerado um gameobject, e todo gameobject tem um transform. Um transform é um game object. Ambos funcionam bem.
     //A dica é sempre usar gameobject quando se esta instanciando coisas.
+    //o RigidBody é mais utilizado em quem é responsavel pela colisao, mas nao faz tanta diferenca.
 
     //SerializeField é um atributo que permite a variavel aparecer no inspetor(unity), msm sendo privada. Processo chamado de [Sereializacao].
     //ao usar um float com casa decimal, tem q incluir um f no final(determina q eh um valor decimal).
@@ -34,10 +35,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 5.0f;
 
+    [SerializeField]
+    private GameObject _explosionPrefab;
+
     public bool canTripleShot = false;
     //um padrao eh definir uma bool como uma pergunta isSpeedBostActive
     public bool canSpeedBost = false;
 
+    public int lives = 3;
+  
 
     // Start is called before the first frame update
     void Start()
@@ -176,7 +182,7 @@ public class Player : MonoBehaviour
     //se destruirmos o objeto q chama a corotina, ele nunca sera habilitado.
     //melhor maneira de corrigir isso é criar um metodo(no player) q ativa o powerup.
 
-    //couroutine
+    //couroutine.
     public IEnumerator TripleShotDownRoutine()
     {
         //faz esperar por um tempo em segundos.
@@ -186,6 +192,7 @@ public class Player : MonoBehaviour
         canTripleShot = false;
     }
 
+    //metodo p ativar o powerup.
     public void SpeedBoostPowerupOn()
     {
         canSpeedBost = true;
@@ -193,10 +200,21 @@ public class Player : MonoBehaviour
         StartCoroutine(SpeedBostDownRoutine());
     }
 
+    //couroutine.
     public IEnumerator SpeedBostDownRoutine()
     {
         yield return new WaitForSeconds(10.0f);
 
         canSpeedBost = false;
+    }
+
+    public void Damage()
+    {
+        lives--;
+        if(lives < 1)
+        {
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(this.gameObject);            
+        }
     }
 }

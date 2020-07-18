@@ -23,6 +23,14 @@ public class Laser : MonoBehaviour
         //verifica se a posicao do laser eh maior/igual a 6.
         if (transform.position.y >= 6)
         {
+            /*
+            //testando se o objeto pai eh nulo.
+            if(transform.parent != null)
+            {
+            //uma maneira de destruir prefabs reutilizaveis caso o codigo esteja bugado.
+                //e destroi ele(no caso o laser triple shot).
+                Destroy(transform.parent.gameObject);
+            }*/
             //destroi este objeto (laser).
             Destroy(this.gameObject);
         }

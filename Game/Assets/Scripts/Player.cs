@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotPrefab;
+    [SerializeField]
+    private GameObject _shieldPrefab;
 
     //criando as variaveis p poder dar o proximo tiro.
     [SerializeField]
@@ -37,10 +39,13 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject _explosionPrefab;
+    [SerializeField]
+    private GameObject _shielGameObject;
 
     public bool canTripleShot = false;
     //um padrao eh definir uma bool como uma pergunta isSpeedBostActive
     public bool canSpeedBost = false;
+    public bool shieldActive = false;
 
     public int lives = 3;
   
@@ -210,11 +215,30 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        lives--;
-        if(lives < 1)
+        if(shieldActive == true)
         {
-            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
-            Destroy(this.gameObject);            
+            shieldActive = false;
+            _shielGameObject.SetActive(false);
+            // para n continuar a funcao, chamamos return.
+            //basicamente ela diz p voltar ao topo, voltar ao metodo.
+            //ele interrompe o programa.
+            return;
         }
+        else
+        {
+            lives--;
+            if (lives < 1)
+            {
+                Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+                Destroy(this.gameObject);
+            }
+        }       
+    }
+
+    public void ShieldPowerupOn()
+    {
+        shieldActive = true;
+        //habilitando o gameobject shield, q é child do player.
+        _shielGameObject.SetActive(true);
     }
 }

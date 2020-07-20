@@ -47,7 +47,7 @@ public class Powerup : MonoBehaviour
                 }
                 else if(powerUpID == 2)
                 {
-                    //enable shield.
+                    player.ShieldPowerupOn();
                 }
 
             }

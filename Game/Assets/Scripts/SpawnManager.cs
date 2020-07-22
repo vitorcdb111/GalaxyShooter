@@ -27,7 +27,7 @@ public class SpawnManager : MonoBehaviour
         {
             //gerando num valor aleatorio entre -7 e 7 e acima do campo de visao.
             Instantiate(_enemyShipPrefab, new Vector3(Random.Range(-7f, 7f), 7, 0), Quaternion.identity);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2.5f);
         }
     }
 

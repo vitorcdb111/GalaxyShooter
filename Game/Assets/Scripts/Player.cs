@@ -48,13 +48,29 @@ public class Player : MonoBehaviour
     public bool shieldActive = false;
 
     public int lives = 3;
+
+    //manipulador para o uimanager
+    private UIManager _uiManager;
   
 
     // Start is called before the first frame update
     void Start()
     {      
         //passando os valores dos eixos "x, y, z" para 0, no objeto.
+        //current pos = new pos.
         transform.position = new Vector3(0, 0, 0);
+
+        //estou acessando no inspetor do player p o canvas, assim consigo acessar o script uimanager q esta la.
+        //parecido como se faz no  powerup.
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        //verificando se encontrou o ui manager
+        if(_uiManager != null)
+        {
+            //acessando o metodo updatelives do UIManager
+            //dentro do () informe a vida atual(curentlive(lives))
+            _uiManager.UpdateLives(lives);
+        }
     }
 
 
@@ -227,6 +243,10 @@ public class Player : MonoBehaviour
         else
         {
             lives--;
+
+            //atualizando o hud de vida.
+            _uiManager.UpdateLives(lives);
+
             if (lives < 1)
             {
                 Instantiate(_explosionPrefab, transform.position, Quaternion.identity);

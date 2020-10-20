@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public Image livesImageDisplay;
     public int score;
     public Text scoreText;
+    public GameObject titleScreen;
 
     //metodo personalizado parecido com o collider other
     //criar uma variavel p saber quantas vidas o player tem
@@ -24,5 +25,20 @@ public class UIManager : MonoBehaviour
     {
         score += 10;
         scoreText.text = "Score: " + score;
+    }
+
+
+    //funcoes q serao chamadas no GamaManager.
+    public void ShowTitleScreen()
+    {
+        titleScreen.SetActive(true);
+    }
+
+    public void HideTitleScreen()
+    {
+        titleScreen.SetActive(false);
+        //rezetando de maneira simples a pontucao do score.
+        scoreText.text = "Score: ";
+        score = 0;
     }
 }

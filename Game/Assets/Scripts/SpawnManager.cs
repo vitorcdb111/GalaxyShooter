@@ -11,8 +11,17 @@ public class SpawnManager : MonoBehaviour
     //criar um array p armazenar todos powerups em um so lugar.
     private GameObject[] _powerups;
 
+    private GameManager _gameManager;
+
     // Start is called before the first frame update
     void Start()
+    {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        StartCoroutine(EnemySpawnRoutine());
+        StartCoroutine(PowerupSpawnRoutine());
+    }
+
+    public void StartSpawnRoutines()
     {
         StartCoroutine(EnemySpawnRoutine());
         StartCoroutine(PowerupSpawnRoutine());
@@ -20,10 +29,10 @@ public class SpawnManager : MonoBehaviour
 
     //coroutine p geracao do inimigo.
     IEnumerator EnemySpawnRoutine()
-    {        
+    {            
         //criar um loop q gere a cada tantos segundos o inimigo.
         //enquanto a condicao for verdadeira.
-        while (true)
+        while (_gameManager.gameOver == false)
         {
             //gerando num valor aleatorio entre -7 e 7 e acima do campo de visao.
             Instantiate(_enemyShipPrefab, new Vector3(Random.Range(-7f, 7f), 7, 0), Quaternion.identity);
@@ -33,7 +42,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator PowerupSpawnRoutine()
     {
-        while(true)
+        while (_gameManager.gameOver == false)
         {
             //variavel p armazenar um valor aleatorio entre 0 e 2.
             int randomPowerUp = Random.Range(0, 3);

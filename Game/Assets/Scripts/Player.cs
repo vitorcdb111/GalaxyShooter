@@ -51,18 +51,22 @@ public class Player : MonoBehaviour
 
     //manipulador para o uimanager
     private UIManager _uiManager;
-  
+    //manipulando a tela de titulo
+    private GameManager _gameManager;
+
+    private SpawnManager _spawnManager;
+
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {      
         //passando os valores dos eixos "x, y, z" para 0, no objeto.
         //current pos = new pos.
-        transform.position = new Vector3(0, 0, 0);
+        transform.position = new Vector3(0, 0, 0);        
 
         //estou acessando no inspetor do player p o canvas, assim consigo acessar o script uimanager q esta la.
         //parecido como se faz no  powerup.
-        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();        
 
         //verificando se encontrou o ui manager
         if(_uiManager != null)
@@ -71,11 +75,24 @@ public class Player : MonoBehaviour
             //dentro do () informe a vida atual(curentlive(lives))
             _uiManager.UpdateLives(lives);
         }
+
+        //pegando a referencia do script GameManager
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+
+
+
+        //ativando o spawn tanto dos inimigos quanto dos powerUps  
+        if (_spawnManager != null)
+        {
+            _spawnManager.StartSpawnRoutines();
+        }
     }
 
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //inicializando o metodo(funcao) Movement.
         //a cada frame que chamarmos o metodo, todo o codigo dele sera lido.
@@ -250,6 +267,8 @@ public class Player : MonoBehaviour
             if (lives < 1)
             {
                 Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+                _gameManager.gameOver = true;
+                _uiManager.ShowTitleScreen();
                 Destroy(this.gameObject);
             }
         }       

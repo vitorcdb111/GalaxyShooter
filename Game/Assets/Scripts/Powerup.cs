@@ -13,6 +13,12 @@ public class Powerup : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        //testando se o objeto saiu da tela, p destruir ele.
+        if(transform.position.y < -7)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     // other é o objeto q colidiu com o objeto deste script(powerup).

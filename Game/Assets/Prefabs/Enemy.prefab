@@ -121,3 +121,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyExplosionPrefab: {fileID: 7459188800905269424, guid: c646d461e7c513740bc7ebe05582dd2a,
     type: 3}
+  _audioClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}

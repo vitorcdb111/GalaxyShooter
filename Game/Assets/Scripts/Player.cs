@@ -56,6 +56,9 @@ public class Player : MonoBehaviour
 
     private SpawnManager _spawnManager;
 
+    //adicionando audio aos efeitos do game
+    private AudioSource _audioSource;
+
 
     // Start is called before the first frame update
     private void Start()
@@ -81,6 +84,9 @@ public class Player : MonoBehaviour
 
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
 
+        //como ja estou no objeto do jogo, nao preciso procuar ele,
+        //posso apenas colocar o GetComponent.
+        _audioSource = GetComponent<AudioSource>();
 
 
         //ativando o spawn tanto dos inimigos quanto dos powerUps  
@@ -184,10 +190,16 @@ public class Player : MonoBehaviour
         //se for, posso atirar.
         if (Time.time > _canFire)
         {
-            if(canTripleShot == true)
+            //ativando o som toda vez q o tiro é disparado.
+            //no metodo play, qualquer que seja a faixa atribuida atraves do inspetor,
+            //é o clip que seja tocado.
+            _audioSource.Play();
+
+            if (canTripleShot == true)
             {
                 //center
                 Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+
             }
 
             else

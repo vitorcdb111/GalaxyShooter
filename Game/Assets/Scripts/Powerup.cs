@@ -9,6 +9,9 @@ public class Powerup : MonoBehaviour
     [SerializeField]
     private int powerUpID; //0 = triple shot / 1 = speed boost / 2 = shield.
 
+    [SerializeField]
+    private AudioClip _audioClip;
+
     // Update is called once per frame
     void Update()
     {
@@ -37,8 +40,11 @@ public class Powerup : MonoBehaviour
             //depois "()".
             //a classe tem q ser identica ao q esta dentro do maior menor(<>).
             Player player = other.GetComponent<Player>();
+
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
+
             //sempre verificar se o componente é nulo.
-            if(player != null)
+            if (player != null)
             {
                 //definimos no inspetor os ids, assim, cada powerup tem seu proprio id.
                 if(powerUpID == 0)

@@ -10,6 +10,10 @@ public class EnemyAI : MonoBehaviour
     private GameObject _enemyExplosionPrefab;
     private UIManager _uiManager;
 
+    //instanciando um clip especifico.
+    [SerializeField]
+    private AudioClip _audioClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,14 +39,20 @@ public class EnemyAI : MonoBehaviour
     {
         if(other.tag == "Laser")
         {
-            Destroy(other.gameObject);
-
+            Destroy(other.gameObject);        
             if (_uiManager != null)
             {
                 _uiManager.UpdateScore();
             }
 
             Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
+            //esse metodo nos permite instanciar um clip de audio q esta prestes a ser destruido.
+            //mas ele precisa saber qual clip vai instanciar.
+            //clipAtPoint, toca em uma determinada posicao no espaco.
+            //Quando passamos a posicao, ele pega a posicao 3D, para deixar o som
+            //mais proximo ao usuario, passamos a Main Camera.
+            //o ultimo parametro é o volume.
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
             Destroy(this.gameObject);            
         }
 
@@ -61,6 +71,7 @@ public class EnemyAI : MonoBehaviour
             }
 
             Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
             Destroy(this.gameObject);            
         }
     }

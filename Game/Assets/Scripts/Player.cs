@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
     private GameObject _tripleShotPrefab;
     [SerializeField]
     private GameObject _shieldPrefab;
+    //array com as duas turbinas
+    [SerializeField]
+    private GameObject[] _engines;
 
     //criando as variaveis p poder dar o proximo tiro.
     [SerializeField]
@@ -59,6 +62,9 @@ public class Player : MonoBehaviour
     //adicionando audio aos efeitos do game
     private AudioSource _audioSource;
 
+    //variavel para saber o numero de hits que o player levou.
+    private int hitCount = 0;
+
 
     // Start is called before the first frame update
     private void Start()
@@ -88,6 +94,8 @@ public class Player : MonoBehaviour
         //posso apenas colocar o GetComponent.
         _audioSource = GetComponent<AudioSource>();
 
+        //garantindo que toda vez que for gerado, seu valor seja 0.
+        hitCount = 0;
 
         //ativando o spawn tanto dos inimigos quanto dos powerUps  
         if (_spawnManager != null)
@@ -260,7 +268,7 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        if(shieldActive == true)
+        if (shieldActive == true)
         {
             shieldActive = false;
             _shielGameObject.SetActive(false);
@@ -272,6 +280,21 @@ public class Player : MonoBehaviour
         else
         {
             lives--;
+            //toda vez que levamos dano, incrementasse o contador.
+            hitCount++;
+
+            if (hitCount == 1)
+            {
+                //ativando o dano no motor esquerdo
+                //acessando o array com a posicao onde esta o motor esquerdo, e setando ele p ativo.
+                _engines[0].SetActive(true);
+
+            }
+            else if (hitCount == 2)
+            {
+                //ativando o dano no motor direito
+                _engines[1].SetActive(true);
+            }
 
             //atualizando o hud de vida.
             _uiManager.UpdateLives(lives);
